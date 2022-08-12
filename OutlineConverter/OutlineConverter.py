@@ -9,7 +9,7 @@ from pathlib import Path
 
 tile_set_dir = "AbsoluteUnits/Images/TileSets/HexaRealm/Units"  # change to your directory here
 outline_color = (0, 0, 0, 255)
-shadow_color = (0, 0, 0, 83)  # can be set to (0, 0, 0, 0) to also blend shadow into the outline
+blend_blacklist = {(0, 0, 0, 0), (0, 0, 0, 83)}  # A set of all colors which should not be blended into the outline. Set to {} to allow everything or {(0, 0, 0, 0)} to only blacklist transparent pixel.
 outline_darkness = 1.5  # Must be != 0 | > 1 -> darker | < 1 -> lighter
 darken_base_color_outline = True  # Determines if the outline_darkness is used to darken the base color outline
 darken_nation_color_outlines = False  # Determines if the outline_darkness is used to also darken the nation color outline in the nation color files
@@ -21,12 +21,13 @@ reduce_nation_color_alpha = True  # Determines if the nation color outline alpha
 
 def add_to_list(pixels: list, pixel_value: tuple):
     """
-    Adds the pixel_value to pixels if pixel_value is not transparent, outline_color or shadow_color
+    Adds the pixel_value to pixels if pixel_value is not outline_color or any of the colors in blend_blacklist
 
     :param pixels: the list to add
     :param pixel_value: the value to add
     """
-    if pixel_value != (0, 0, 0, 0) and pixel_value != outline_color and pixel_value != shadow_color:
+
+    if pixel_value != outline_color and pixel_value not in blend_blacklist:
         pixels.append(pixel_value)
 
 
